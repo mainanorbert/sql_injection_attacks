@@ -7,3 +7,7 @@ def home(request):
     View function for home page of site.
     """
     return render(request, 'home.html')
+
+def register(request):
+    """register page for app"""
+    return render(request, 'register.html')
