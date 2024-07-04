@@ -4,7 +4,9 @@
 *.pyc
 __pycache__/
 db.sqlite3
+node_modules
 media
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
+venv
