@@ -8,6 +8,4 @@ def home(request):
     """
     return render(request, 'home.html')
 
-def register(request):
-    """register page for app"""
-    return render(request, 'register.html')
+
