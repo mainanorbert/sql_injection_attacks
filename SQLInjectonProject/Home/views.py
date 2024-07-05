@@ -6,6 +6,7 @@ def home(request):
     """
     View function for home page of site.
     """
-    return render(request, 'home.html')
+    username = request.session.get('username', None)
+    return render(request, 'home.html', {'username': username})
 
 

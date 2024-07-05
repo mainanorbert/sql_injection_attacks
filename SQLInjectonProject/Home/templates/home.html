@@ -44,8 +44,16 @@
 			
 			<li><a class="text-sm text-gray-400 hover:text-gray-500" href="#">Contact</a></li>
 		</ul>
+		{% if username %}
+		<div class="bg-yellow-500">
+			<p >Hello, {{username}}</p>
+		<a href="{% url 'logout' %}" class="bg-red-600 p-1 rounded" >Logout</a>
+		</div>
+		
+		{% else %}
 		<a href="{% url 'login'%}" class="hidden lg:inline-block lg:ml-auto lg:mr-3 py-2 px-6 bg-gray-50 hover:bg-gray-100 text-sm text-gray-900 font-bold  rounded-xl transition duration-200" href="#">Sign In</a>
 		<a href="{% url 'register'%}" class="hidden lg:inline-block py-2 px-6 bg-blue-500 hover:bg-blue-600 text-sm text-white font-bold rounded-xl transition duration-200" href="#">Sign up</a>
+		{% endif %}
 	</nav>
     {% comment %} This is where the display page lies {% endcomment %}
     <div class='h-screen bg-green-400'></div>

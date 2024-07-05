@@ -43,15 +43,26 @@ def login(request):
         
         query = f"SELECT * FROM account_user WHERE username = '{username}' AND password = '{password}';"
         
-        with connection.cursor() as cursor:
-            cursor.execute(query)
-            user = cursor.fetchone()
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute(query)
+                user = cursor.fetchone()
         
-        if user:
-            messages.success(request, f"Welcome back, {username}!")
-            return redirect('home')  # Redirect to the home page or another page
-        else:
-            messages.error(request, "Invalid username or password!")
+            if user:
+                request.session['username'] = username
+                messages.success(request, f"Welcome back, {username}!")
+                return redirect('home')  # Redirect to the home page or another page
+            else:
+                messages.error(request, "Invalid username or password!")
+                return redirect('login')
+        except Exception as e:
+            messages.error(request, f"An error occurred: {str(e)}")
             return redirect('login')
     
     return render(request, 'login.html')
+
+def logout(request):
+    """Logout the user and clear the session"""
+    request.session.flush()
+    messages.success(request, "You have been logged out successfully!")
+    return redirect('home')
