@@ -7,8 +7,7 @@ from django.contrib.auth import authenticate, login as auth_login
 def register(request):
     """Register page for the app"""
     if request.method == 'POST':
-        firstname = request.POST.get('firstname')
-        lastname = request.POST.get('lastname')
+        level = request.POST.get('level')
         username = request.POST.get('username')
         email = request.POST.get('email')
         password = request.POST.get('password')
@@ -17,12 +16,18 @@ def register(request):
         if password != confirm_password:
             messages.error(request, "Passwords do not match!")
             return redirect('register')
-        
-        query = f"INSERT INTO account_user (firstname, lastname, username, email, password) VALUES ('{firstname}', '{lastname}', '{username}', '{email}', '{password}');"
-        
+
+        if level == 'low':
+            query = f"INSERT INTO account_user (firstname, lastname, username, email, password) VALUES ('{firstname}', '{lastname}', '{username}', '{email}', '{password}');"
+        else:
+            query = "INSERT INTO account_user (firstname, lastname, username, email, password) VALUES (%s, %s, %s, %s, %s);"
+
         try:
             with connection.cursor() as cursor:
-                cursor.execute(query)
+                if level == 'low':
+                    cursor.execute(query)
+                else:
+                    cursor.execute(query, [firstname, lastname, username, email, password])
             messages.success(request, f"User {username} registered successfully!")
             return redirect('login')
         except IntegrityError:
@@ -34,18 +39,24 @@ def register(request):
     
     return render(request, 'register.html')
 
-
 def login(request):
     """Login page for the app"""
     if request.method == 'POST':
+        level = request.POST.get('level')
         username = request.POST.get('username')
         password = request.POST.get('password')
         
-        query = f"SELECT * FROM account_user WHERE username = '{username}' AND password = '{password}';"
-        
+        if level == 'low':
+            query = f"SELECT * FROM account_user WHERE username = '{username}' AND password = '{password}';"
+        else:
+            query = "SELECT * FROM account_user WHERE username = %s AND password = %s;"
+
         try:
             with connection.cursor() as cursor:
-                cursor.execute(query)
+                if level == 'low':
+                    cursor.execute(query)
+                else:
+                    cursor.execute(query, [username, password])
                 user = cursor.fetchone()
         
             if user:
