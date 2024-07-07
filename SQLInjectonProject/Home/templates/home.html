@@ -45,9 +45,9 @@
 			<li><a class="text-sm text-gray-400 hover:text-gray-500" href="#">Contact</a></li>
 		</ul>
 		{% if username %}
-		<div class="bg-yellow-500">
-			<p >Hello, {{username}}</p>
-		<a href="{% url 'logout' %}" class="bg-red-600 p-1 rounded" >Logout</a>
+		<div class="w-2/12 flex justify-between text-center">
+			<p class="lg:inline-block lg:ml-auto lg:mr-3 py-2 px-6 bg-gray-50" >Hi, {{username}}</p>
+		<a href="{% url 'logout' %}" class="bg-red-500 lg:mr-3 py-2 px-2 inline-block hover:bg-red-600 p-1 text-xs text-white rounded" >Logout</a>
 		</div>
 		
 		{% else %}

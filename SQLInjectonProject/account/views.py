@@ -18,16 +18,16 @@ def register(request):
             return redirect('register')
 
         if level == 'low':
-            query = f"INSERT INTO account_user (firstname, lastname, username, email, password) VALUES ('{firstname}', '{lastname}', '{username}', '{email}', '{password}');"
+            query = f"INSERT INTO account_user (username, email, password) VALUES ('{username}', '{email}', '{password}');"
         else:
-            query = "INSERT INTO account_user (firstname, lastname, username, email, password) VALUES (%s, %s, %s, %s, %s);"
+            query = "INSERT INTO account_user (username, email, password) VALUES (%s, %s, %s);"
 
         try:
             with connection.cursor() as cursor:
                 if level == 'low':
                     cursor.execute(query)
                 else:
-                    cursor.execute(query, [firstname, lastname, username, email, password])
+                    cursor.execute(query, [username, email, password])
             messages.success(request, f"User {username} registered successfully!")
             return redirect('login')
         except IntegrityError:
