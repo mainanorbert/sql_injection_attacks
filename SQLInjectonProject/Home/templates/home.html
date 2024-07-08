@@ -56,9 +56,16 @@
 		{% endif %}
 	</nav>
     {% comment %} This is where the display page lies {% endcomment %}
-    <div class='h-screen  bg-green-400'
-	style="background-image: url('{% static 'images/bg.webp' %}'); background-size: cover;"
-	></div>
+    <div class='h-screen relative  bg-green-400'	
+	style="background-image: url('{% static 'images/bg2.webp' %}');
+	background-size: cover;
+	background-position: center;
+	"
+	>
+	<p class='pt-[12rem] pl-[10rem] text-5xl bg-transparent text-gray-50 absolute'>SQL</p>
+	<p class='pt-[4rem] pl-[35rem] text-5xl bg-transparent text-gray-50 absolute'>INJECTION  ATTACK </p>
+	<p class='pt-[12rem] pl-[65rem] text-5xl bg-transparent text-gray-50 absolute'>INTERFACE</p>
+</div>
 	<div class="navbar-menu relative z-50 hidden">
 		<div class="navbar-backdrop fixed inset-0 bg-gray-800 opacity-25"></div>
 		<nav class="fixed top-0 left-0 bottom-0 flex flex-col w-5/6 max-w-sm py-6 px-6 bg-white border-r overflow-y-auto">
