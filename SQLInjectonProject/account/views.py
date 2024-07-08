@@ -48,6 +48,8 @@ def login(request):
         
         if level == 'low':
             query = f"SELECT * FROM account_user WHERE username = '{username}' AND password = '{password}';"
+        elif level == 'medium':
+            query = "SELECT * FROM account_user WHERE username = %s AND password = %s;"
         else:
             query = "SELECT * FROM account_user WHERE username = %s AND password = %s;"
 
