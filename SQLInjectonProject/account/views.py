@@ -15,7 +15,7 @@ def register(request):
         
         if password != confirm_password:
             messages.error(request, "Passwords do not match!")
-            return redirect('register')
+            return redirect(f'{request.path}?error=1')
 
         if level == 'low':
             query = f"INSERT INTO account_user (username, email, password) VALUES ('{username}', '{email}', '{password}');"
@@ -28,14 +28,16 @@ def register(request):
                     cursor.execute(query)
                 else:
                     cursor.execute(query, [username, email, password])
-            messages.success(request, f"User {username} registered successfully!")
+            # messages.success(request, f"User {username} registered successfully!")
             return redirect('login')
         except IntegrityError:
             messages.error(request, "Username or email already exists!")
-            return redirect('register')
+            return redirect(f'{request.path}?error=1')
+            # return redirect('register')
         except Exception as e:
             messages.error(request, f"An error occurred: {str(e)}")
-            return redirect('register')
+            return redirect(f'{request.path}?error=1')
+            # return redirect('register')
     
     return render(request, 'register.html')
 
@@ -63,11 +65,17 @@ def login(request):
         
             if user:
                 request.session['username'] = username
-                messages.success(request, f"Welcome back, {username}!")
+                messages.success(request, "Successfully Logged in!")
                 return redirect('home')  # Redirect to the home page or another page
             else:
                 messages.error(request, "Invalid username or password!")
-                return redirect('login')
+                return redirect(f'{request.path}?error=1')
+                
+                # return redirect('login')
+                # render(request, 'login.html', {'username': username, 'level': level})
+                
+            
+                # return render(request, 'login.html', {'username': username, 'level': level})
         except Exception as e:
             messages.error(request, f"An error occurred: {str(e)}")
             return redirect('login')

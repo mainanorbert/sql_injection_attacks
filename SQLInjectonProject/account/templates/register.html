@@ -7,6 +7,18 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta http-equiv="X-UA-Compatible" content="ie=edge">
 		{% tailwind_css %}
+		<script>
+			window.onload = function() {
+				// Check if the error parameter is in the URL
+				const urlParams = new URLSearchParams(window.location.search);
+				if (urlParams.has('error')) {
+					// Refresh the page after 1 second to clear the error message
+					setTimeout(() => {
+						window.location.href = window.location.pathname;
+					}, 1000);
+				}
+			};
+		</script>
 	</head>
     <body>
 		<nav class="relative px-4 py-4 flex justify-between items-center bg-white">

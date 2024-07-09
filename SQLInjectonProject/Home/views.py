@@ -4,7 +4,7 @@ from django.shortcuts import render
 
 def home(request):
     """
-    View function for home page of site.
+    View function for home page of the app.
     """
     username = request.session.get('username', None)
     return render(request, 'home.html', {'username': username})
