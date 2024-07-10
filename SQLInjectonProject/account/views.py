@@ -3,6 +3,7 @@ from django.db import connection, IntegrityError
 from django.http import HttpResponse
 from django.contrib import messages
 from django.contrib.auth import authenticate, login as auth_login
+from django.contrib.auth.models import User
 
 def register(request):
     """Register page for the app"""
@@ -16,11 +17,25 @@ def register(request):
         if password != confirm_password:
             messages.error(request, "Passwords do not match!")
             return redirect(f'{request.path}?error=1')
+        
+        
 
         if level == 'low':
             query = f"INSERT INTO account_user (username, email, password) VALUES ('{username}', '{email}', '{password}');"
-        else:
+        elif level == 'high':
             query = "INSERT INTO account_user (username, email, password) VALUES (%s, %s, %s);"
+        else:
+            if level == 'high':
+                try:
+                    user = User.objects.create_user(username=username, email=email, password=password)
+                    messages.success(request, f"User {username} registered successfully!")
+                    return redirect('login')
+                except IntegrityError:
+                    messages.error(request, "Username or email already exists!")
+                    return redirect('register')
+                except Exception as e:
+                    messages.error(request, f"An error occurred: {str(e)}")
+                    return redirect('register')
 
         try:
             with connection.cursor() as cursor:
@@ -48,12 +63,23 @@ def login(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
         
+        
+        
+        
         if level == 'low':
             query = f"SELECT * FROM account_user WHERE username = '{username}' AND password = '{password}';"
-        elif level == 'medium':
+        elif level == 'high':
             query = "SELECT * FROM account_user WHERE username = %s AND password = %s;"
         else:
-            query = "SELECT * FROM account_user WHERE username = %s AND password = %s;"
+            # query = "SELECT * FROM account_user WHERE username = %s AND password = %s;"            
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                auth_login(request, user)
+                messages.success(request, f"Welcome back, {username}!")
+                return redirect('home')
+            else:
+                messages.error(request, "Invalid username or password!")
+                return redirect('login')
 
         try:
             with connection.cursor() as cursor:
