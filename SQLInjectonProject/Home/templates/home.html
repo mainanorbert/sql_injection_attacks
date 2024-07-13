@@ -57,13 +57,20 @@
 		{% if username %}
 		<div class="w-2/12 flex justify-between text-center">
 			<p class="lg:inline-block lg:ml-auto lg:mr-3 py-2 px-6 bg-gray-50" >Hi, {{username}}</p>
-		<a href="{% url 'logout' %}" class="bg-red-500 lg:mr-3 py-2 px-2 inline-block hover:bg-red-600 p-1 text-xs text-white rounded" >Logout</a>
+			<a href="{% url 'logout' %}" class="bg-red-500 lg:mr-3 py-2 px-2 inline-block hover:bg-red-600 p-1 text-xs text-white rounded" >Logout</a>
+
 		</div>
+		
+
+	
+		{% comment %} <p>db:{{db}}</p> {% endcomment %}
+	 
 		
 		{% else %}
 		<a href="{% url 'login'%}" class="hidden lg:inline-block lg:ml-auto lg:mr-3 py-2 px-6 bg-gray-50 hover:bg-gray-100 text-sm text-gray-900 font-bold  rounded-xl transition duration-200" href="#">Sign In</a>
 		<a href="{% url 'register'%}" class="hidden lg:inline-block py-2 px-6 bg-blue-500 hover:bg-blue-600 text-sm text-white font-bold rounded-xl transition duration-200" href="#">Sign up</a>
 		{% endif %}
+		
 	</nav>
     {% comment %} This is where the display page lies {% endcomment %}
     <div class='h-screen relative'	
@@ -72,7 +79,20 @@
 	background-position: center;
 	"
 	>
-
+	{% if db == 'sql_injection' and db_user %}
+       <div>
+		<p>Database: {{ db }}</p>
+        <p>DB User: {{ db_user }}</p>
+	   </div>
+    {% endif %}
+	{% if user_details %}
+	<h2>All User Details:</h2>
+	<ul>
+	  {% for user in user_details %}
+		<li>Username: {{ user.username }}, Email: {{ user.email }}, Password: {{ user.password }}</li>
+	  {% endfor %}
+	</ul>
+  {% endif %}
 	<p class='pt-[12rem] pl-[10rem] text-5xl bg-transparent text-gray-50 absolute'>SQL</p>
 	<p class='pt-[4rem] pl-[35rem] text-5xl bg-transparent text-gray-50 absolute'>INJECTION  ATTACK </p>
 	<p class='pt-[12rem] pl-[65rem] text-5xl bg-transparent text-gray-50 absolute'>INTERFACE</p>
