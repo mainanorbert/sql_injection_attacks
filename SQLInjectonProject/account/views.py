@@ -4,6 +4,19 @@ from django.http import HttpResponse
 from django.contrib import messages
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth.models import User
+import bleach
+
+def sanitize_input(input_data):
+    return bleach.clean(input_data, strip=True)
+
+def validate_email(email):
+    from django.core.validators import validate_email
+    from django.core.exceptions import ValidationError
+    try:
+        validate_email(email)
+        return True
+    except ValidationError:
+        return False
 
 def register(request):
     """Register page for the app"""
@@ -23,6 +36,13 @@ def register(request):
         if level == 'low':
             query = f"INSERT INTO account_user (username, email, password) VALUES ('{username}', '{email}', '{password}');"
         elif level == 'high':
+            username = sanitize_input(username)
+            email = sanitize_input(email)
+            password = sanitize_input(password)
+
+            if not validate_email(email):
+                messages.error(request, "Invalid email address!")
+                return redirect(f'{request.path}?error=1')
             query = "INSERT INTO account_user (username, email, password) VALUES (%s, %s, %s);"
         else:
             if level == 'high':
@@ -60,6 +80,8 @@ def login(request):
     """Login page for the app"""
     if request.method == 'POST':
         level = request.POST.get('level')
+        username = request.POST.get('username')
+        password = request.POST.get('password')
             
         
         if level == 'low':
@@ -67,8 +89,8 @@ def login(request):
             password = request.POST.get('password')  
             query = f"SELECT * FROM account_user WHERE username = '{username}' AND password = '{password}';"
         elif level == 'high':
-            username = request.POST.get('username')
-            password = request.POST.get('password')
+            username = sanitize_input(username)
+            password = sanitize_input(password)
             query = "SELECT * FROM account_user WHERE username = %s AND password = %s;"
               
         else:
