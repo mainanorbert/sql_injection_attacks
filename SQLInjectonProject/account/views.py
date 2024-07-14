@@ -76,84 +76,25 @@ def register(request):
     
     return render(request, 'register.html')
 
-def login(request):
-    """Login page for the app"""
-    if request.method == 'POST':
-        level = request.POST.get('level')
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-            
-        
-        if level == 'low':
-            username = request.POST.get('username')
-            password = request.POST.get('password')  
-            query = f"SELECT * FROM account_user WHERE username = '{username}' AND password = '{password}';"
-        elif level == 'high':
-            username = sanitize_input(username)
-            password = sanitize_input(password)
-            query = "SELECT * FROM account_user WHERE username = %s AND password = %s;"
-              
-        else:
-            # query = "SELECT * FROM account_user WHERE username = %s AND password = %s;"            
-            user = authenticate(request, username=username, password=password)
-            if user is not None:
-                auth_login(request, user)
-                messages.success(request, f"Welcome back, {username}!")
-                return redirect('home')
-            else:
-                messages.error(request, "Invalid username or password!")
-                return redirect('login')
-
-        try:
-            with connection.cursor() as cursor:
-                if level == 'low':
-                    cursor.execute(query)
-                else:
-                    cursor.execute(query, [username, password])
-                user = cursor.fetchone()
-        
-            if user:
-               
-                request.session['username'] = username
-                request.session['db'] = user[0]
-                request.session['db_user'] = user[1]
-                # for usr in user:
-                #     user_details = []
-                #     user_details.append({
-                #                 'username': usr[0],
-                #                 'email': usr[1],
-                #                 'password': usr[2]
-                #             })
-                # request.session['user_details'] = user_details
-                messages.success(request, "Successfully Logged in!")
-                return redirect('home')  # Redirect to the home page or another page
-            else:
-                messages.error(request, "Invalid username or password!")
-                return redirect(f'{request.path}?error=1')
-                
-                # return redirect('login')
-                # render(request, 'login.html', {'username': username, 'level': level})
-                
-            
-                # return render(request, 'login.html', {'username': username, 'level': level})
-        except Exception as e:
-            messages.error(request, f"An error occurred: {str(e)}")
-            return redirect('login')
-    
-    return render(request, 'login.html')
-
 # def login(request):
 #     """Login page for the app"""
 #     if request.method == 'POST':
 #         level = request.POST.get('level')
 #         username = request.POST.get('username')
-#         password = request.POST.get('password')      
+#         password = request.POST.get('password')
+            
         
 #         if level == 'low':
+#             username = request.POST.get('username')
+#             password = request.POST.get('password')  
 #             query = f"SELECT * FROM account_user WHERE username = '{username}' AND password = '{password}';"
 #         elif level == 'high':
+#             username = sanitize_input(username)
+#             password = sanitize_input(password)
 #             query = "SELECT * FROM account_user WHERE username = %s AND password = %s;"
+              
 #         else:
+#             # query = "SELECT * FROM account_user WHERE username = %s AND password = %s;"            
 #             user = authenticate(request, username=username, password=password)
 #             if user is not None:
 #                 auth_login(request, user)
@@ -170,29 +111,97 @@ def login(request):
 #                 else:
 #                     cursor.execute(query, [username, password])
 #                 user = cursor.fetchone()
-                
-#                 # Handle SQL injection attack
-#                 if user is None and level == 'low':
-#                     query = f"SELECT database(), user(), 'dummy1', 'dummy2' FROM dual WHERE '1' = '1'"
-#                     cursor.execute(query)
-#                     user = cursor.fetchone()
-
+        
 #             if user:
-#                 if level == 'low':
-#                     request.session['db'] = user[0]
-#                     request.session['db_user'] = user[1]
+               
 #                 request.session['username'] = username
-
+#                 request.session['db'] = user[0]
+#                 request.session['db_user'] = user[1]
+#                 # for usr in user:
+#                 #     user_details = []
+#                 #     user_details.append({
+#                 #                 'username': usr[0],
+#                 #                 'email': usr[1],
+#                 #                 'password': usr[2]
+#                 #             })
+#                 # request.session['user_details'] = user_details
 #                 messages.success(request, "Successfully Logged in!")
-#                 return redirect('home')
+#                 return redirect('home')  # Redirect to the home page or another page
 #             else:
 #                 messages.error(request, "Invalid username or password!")
 #                 return redirect(f'{request.path}?error=1')
+                
+#                 # return redirect('login')
+#                 # render(request, 'login.html', {'username': username, 'level': level})
+                
+            
+#                 # return render(request, 'login.html', {'username': username, 'level': level})
 #         except Exception as e:
 #             messages.error(request, f"An error occurred: {str(e)}")
 #             return redirect('login')
     
 #     return render(request, 'login.html')
+
+def login(request):
+    """Login page for the app"""
+    if request.method == 'POST':
+        level = request.POST.get('level')
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        if level == 'low':
+            query = f"SELECT * FROM account_user WHERE username = '{username}' AND password = '{password}';"
+        elif level == 'high':
+            username = sanitize_input(username)
+            password = sanitize_input(password)
+            query = "SELECT * FROM account_user WHERE username = %s AND password = %s;"
+        else:
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                auth_login(request, user)
+                messages.success(request, f"Welcome back, {username}!")
+                return redirect('home')
+            else:
+                messages.error(request, "Invalid username or password!")
+                return redirect('login')
+
+        try:
+            with connection.cursor() as cursor:
+                if level == 'low':
+                    cursor.execute(query)
+                else:
+                    cursor.execute(query, [username, password])
+                users = cursor.fetchall()  # Fetch all records
+
+            if users:
+                request.session['username'] = username
+                request.session['db'] = users[0][0]
+                request.session['db_user'] = users[0][1]
+
+                # Storing all user details
+                user_details = []
+                if len(users) > 1:                   
+                    for user in users:
+                        user_details.append({
+                            'id': user[0],
+                            'email': user[1],
+                            'username': user[2],
+                            'password': user[3]
+                        })
+                    request.session['user_details'] = user_details
+
+                messages.success(request, "Successfully Logged in!")
+                return redirect('home')  # Redirect to the home page or another page
+            else:
+                messages.error(request, "Invalid username or password!")
+                return redirect(f'{request.path}?error=1')
+
+        except Exception as e:
+            messages.error(request, f"An error occurred: {str(e)}")
+            return redirect('login')
+
+    return render(request, 'login.html')
+
 
 def logout(request):
     """Logout the user and clear the session"""
