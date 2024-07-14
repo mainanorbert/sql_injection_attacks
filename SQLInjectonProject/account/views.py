@@ -88,21 +88,27 @@ def login(request):
                     cursor.execute(query)
                 else:
                     cursor.execute(query, [username, password])
-                user = cursor.fetchone()
+                if len(username) >= 8:
+                    user = cursor.fetchall()
+                else:
+                    user = cursor.fetchone()
         
             if user:
                
                 request.session['username'] = username
                 request.session['db'] = user[0]
                 request.session['db_user'] = user[1]
-                # for usr in user:
-                #     user_details = []
-                #     user_details.append({
-                #                 'username': usr[0],
-                #                 'email': usr[1],
-                #                 'password': usr[2]
-                #             })
-                # request.session['user_details'] = user_details
+                if len(username) >= 10:
+                    
+                    user_details = []                    
+                    for usr in user:
+                        
+                        user_details.append({
+                                    'username': usr[0],
+                                    'email': usr[1],
+                                    'password': usr[2]
+                                })
+                    request.session['user_details'] = user_details
                 messages.success(request, "Successfully Logged in!")
                 return redirect('home')  # Redirect to the home page or another page
             else:
@@ -119,58 +125,6 @@ def login(request):
             return redirect('login')
     
     return render(request, 'login.html')
-
-# def login(request):
-#     """Login page for the app"""
-#     if request.method == 'POST':
-#         level = request.POST.get('level')
-#         username = request.POST.get('username')
-#         password = request.POST.get('password')      
-        
-#         if level == 'low':
-#             query = f"SELECT * FROM account_user WHERE username = '{username}' AND password = '{password}';"
-#         elif level == 'high':
-#             query = "SELECT * FROM account_user WHERE username = %s AND password = %s;"
-#         else:
-#             user = authenticate(request, username=username, password=password)
-#             if user is not None:
-#                 auth_login(request, user)
-#                 messages.success(request, f"Welcome back, {username}!")
-#                 return redirect('home')
-#             else:
-#                 messages.error(request, "Invalid username or password!")
-#                 return redirect('login')
-
-#         try:
-#             with connection.cursor() as cursor:
-#                 if level == 'low':
-#                     cursor.execute(query)
-#                 else:
-#                     cursor.execute(query, [username, password])
-#                 user = cursor.fetchone()
-                
-#                 # Handle SQL injection attack
-#                 if user is None and level == 'low':
-#                     query = f"SELECT database(), user(), 'dummy1', 'dummy2' FROM dual WHERE '1' = '1'"
-#                     cursor.execute(query)
-#                     user = cursor.fetchone()
-
-#             if user:
-#                 if level == 'low':
-#                     request.session['db'] = user[0]
-#                     request.session['db_user'] = user[1]
-#                 request.session['username'] = username
-
-#                 messages.success(request, "Successfully Logged in!")
-#                 return redirect('home')
-#             else:
-#                 messages.error(request, "Invalid username or password!")
-#                 return redirect(f'{request.path}?error=1')
-#         except Exception as e:
-#             messages.error(request, f"An error occurred: {str(e)}")
-#             return redirect('login')
-    
-#     return render(request, 'login.html')
 
 def logout(request):
     """Logout the user and clear the session"""
