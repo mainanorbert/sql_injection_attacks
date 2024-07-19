@@ -1,13 +1,23 @@
+
 {% load static tailwind_tags %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Us</title>
-    <!-- <link href="{% static 'css/styles.css' %}" rel="stylesheet"> -->
-    {% tailwind_css %}
-</head>
+	<head>
+    <title>SQL injection attacks</title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		{% tailwind_css %}
+		<script>
+			// Hide the message after 5 seconds
+			setTimeout(function() {
+				var messageContainer = document.getElementById('message-container');
+				if (messageContainer) {
+					messageContainer.style.display = 'none';
+				}
+			}, 3000); // 5000 milliseconds = 5 seconds
+		</script>
+	</head>
 <body>
     <section class="body-font relative bg-gray-900 text-gray-400">
 

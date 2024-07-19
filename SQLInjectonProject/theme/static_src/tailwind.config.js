@@ -41,7 +41,7 @@ module.exports = {
          */
         // '../../**/*.py'
     ],
-    darkMode: 'class',
+
     theme: {
         extend: {},
     },
@@ -57,9 +57,3 @@ module.exports = {
     ],
 }
 
-tailwind.config = {
-    darkMode: 'class',
-    theme: {
-      extend: {}
-    }
-  }
