@@ -1,0 +1,131 @@
+
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+    <title>SQL injection attacks</title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		{% tailwind_css %}
+		<script>
+			// Hide the message after 5 seconds
+			setTimeout(function() {
+				var messageContainer = document.getElementById('message-container');
+				if (messageContainer) {
+					messageContainer.style.display = 'none';
+				}
+			}, 3000); // 5000 milliseconds = 5 seconds
+		</script>
+	</head>
+<body class="flex flex-col min-h-screen bg-gray-400">
+    <nav class="relative px-4 py-4 flex justify-between items-center bg-white">
+		<img
+		class="w-14 h-14 rounded-full"
+		 src="{% static 'images/alber2.jpg' %}" alt="My Image" class="w-full h-auto">
+		<div class="lg:hidden">
+			<button class="navbar-burger flex items-center text-blue-600 p-3">
+				<svg class="block h-4 w-4 fill-current" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+					<title>Mobile menu</title>
+					<path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"></path>
+				</svg>
+			</button>
+		</div>
+		<ul class="hidden absolute top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2 lg:mx-auto lg:flex lg:items-center lg:w-auto lg:space-x-6">
+			<li><a class="text-sm text-gray-400 hover:text-gray-500" href="{% url 'home'%}">Home</a></li>
+			<li class="text-gray-300">
+				<svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" class="w-4 h-4 current-fill" viewBox="0 0 24 24">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v0m0 7v0m0 7v0m0-13a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+				</svg>
+			</li>
+			<li><a class="text-sm text-blue-600 font-bold" href="{% url 'about' %}">About</a></li>
+			<li class="text-gray-300">
+				<svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" class="w-4 h-4 current-fill" viewBox="0 0 24 24">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v0m0 7v0m0 7v0m0-13a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+				</svg>
+			</li>
+			
+			
+			<li><a class="text-sm text-gray-400 hover:text-gray-500" href="{% url 'contact' %}">Contact</a></li>
+		</ul>
+		
+		{% if username %}
+		<div class="w-2/12 flex justify-between text-center">
+			<p class="lg:inline-block lg:ml-auto lg:mr-3 py-2 px-6 bg-gray-50" >Hi, {{username}}</p>
+			<a href="{% url 'logout' %}" class="bg-red-500 lg:mr-3 py-2 px-2 inline-block hover:bg-red-600 p-1 text-xs text-white rounded" >Logout</a>
+
+		</div>
+		
+
+	
+		{% comment %} <p>db:{{db}}</p> {% endcomment %}
+	 
+		
+		{% else %}
+		<a href="{% url 'login'%}" class="hidden lg:inline-block lg:ml-auto lg:mr-3 py-2 px-6 bg-gray-50 hover:bg-gray-100 text-sm text-gray-900 font-bold  rounded-xl transition duration-200" href="#">Sign In</a>
+		<a href="{% url 'register'%}" class="hidden lg:inline-block py-2 px-6 bg-blue-500 hover:bg-blue-600 text-sm text-white font-bold rounded-xl transition duration-200" href="#">Sign up</a>
+		{% endif %}
+		
+	</nav>
+   
+
+    <main class="flex-grow container  mx-auto py-8 border-t-2">
+        <section class=" mb-12 ">
+            <h1 class="text-3xl font-bold mb-6 ">About</h1>
+            <p class="text-lg">
+                The intention of this project is to fulfill a partial requirement for a Master’s degree in Cyber Security
+                by demonstrating a deep understanding of SQL injection vulnerabilities and defenses. The project aims to analyze and contrast insecure and secure coding practices within web applications, using practical examples to highlight the risks and countermeasures associated with SQL injection attacks. This research contributes to the field by providing insights into effective security measures, particularly focusing on the implementation of parameterized queries and ORM frameworks,
+                thereby advancing the understanding and practice of secure software development.
+               
+            </p>
+        </section>
+
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold mb-6">Our Objective</h2>
+            <p class="text-lg">The primary goal is to offer a controlled environment where users can learn about SQL injections in a practical setting. The project is divided into two levels:<br/>
+
+                <strong>Low:</strong> This level is intentionally designed with various vulnerabilities to allow users to practice different SQL injection techniques. By interacting with this level, users can understand how SQL injections exploit weaknesses in the system. <br/>
+                <strong>High:</strong> In contrast, this level is engineered to be secure against SQL injection attacks. It demonstrates best practices for preventing such vulnerabilities and reinforces the importance of robust security measures. <br/>
+                Through this approach, users will gain a comprehensive understanding of SQL injection attacks and the importance of secure coding practices. Please remember that this site is intended solely for educational purposes and should not be used for any malicious activities.</p>
+        </section>
+
+        <section class="bg-blue-800 text-white py-8">
+            <div class="container mx-auto text-center">
+                <h2 class="text-2xl font-bold mb-4">Learn More</h2>
+                <p class="text-lg mb-4">Explore more about the project how it protects against SQL injection attacks.</p>
+                <a href="{% url 'contact' %}" class="bg-white text-blue-800 py-2 px-4 rounded-lg font-semibold hover:bg-gray-200">Contact Us</a>
+            </div>
+        </section>
+    </main>
+
+    <div class='bg-black'>
+        <div class="flex justify-around bg-black text-white">
+            <div>
+                <ul>
+                    <li>Home</li>
+                    <li>About</li>
+                    <li>Contact</li>
+                </ul>
+            </div>
+            <div>
+                <ul>
+                    <li>Twitter</li>
+                    <li>Facebook</li>
+                    <li>LinkedIn</li>
+                </ul>
+            </div>
+            <div>
+                <ul>
+                    <li>SQL injection Attacks</li>
+                    <li>Cyber Security</li>
+                    <li>Cyber Attack</li>
+                </ul>
+            </div>
+            
+        </div>
+        <p class=" text-xs text-center pt-4 text-gray-400">
+            <span class="pr-[4rem]">Copyright © 2021</span>
+        </p>
+    </div>
+</body>
+</html>

@@ -41,6 +41,7 @@ module.exports = {
          */
         // '../../**/*.py'
     ],
+
     theme: {
         extend: {},
     },
@@ -55,3 +56,4 @@ module.exports = {
         require('@tailwindcss/aspect-ratio'),
     ],
 }
+
